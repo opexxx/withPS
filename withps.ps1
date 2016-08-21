@@ -20,7 +20,7 @@ if ($progPath.StartsWith($progInstallFolder)) {
 $program = $args -join " "
 
 function printHelp {
-    Write-Output "Syntax: with program [-h] [-v]"
+    Write-Output "Syntax: with [-h] [-v] [-u] [-i] [-d] [-r] program"
     Write-Output "-h, -help:    Display this message"
     Write-Output "-v, -version: Display the currently installed version of with"
     Write-Output "-u, -update:  Updates with"
@@ -39,8 +39,8 @@ function printVersion {
 function update {
     Write-Output "Updating withPS $progVersion"
     New-Item $progInstallFolder -Force -itemtype directory | Out-Null
-    Invoke-WebRequest https://cdn.rawgit.com/Acader/withPS/master/withps.ps1 -OutFile "$progInstallFolder/withps.ps1"
-    Invoke-WebRequest https://cdn.rawgit.com/Acader/withPS/master/with.cmd-OutFile "$progInstallFolder/with.cmd"
+    Invoke-WebRequest https://cdn.rawgit.com/Acader/withPS/master/withps.ps1 -OutFile "$progInstallFolder\withps.ps1"
+    Invoke-WebRequest https://cdn.rawgit.com/Acader/withPS/master/with.cmd-OutFile "$progInstallFolder\with.cmd"
     if (-not $progInstalled) {
         install $false    
     }
@@ -63,7 +63,7 @@ function install($copy = $true) {
         Write-Output "withPS is already in the PATH"
     }
     if ($delete) {
-        Remove-Item -LiteralPath $progPath -Force
+        Remove-Item $progPath -Force
     }
     Write-Output "Installation finished"
 }
@@ -78,7 +78,9 @@ function remove () {
     } else {
         Write-Output "withPS isn't in the PATH"
     }
-    Remove-Item -Recurse -Force $progInstallFolder   
+    If (Test-Path $progInstallFolder){
+        Remove-Item -Recurse -Force $progInstallFolder
+    }
 
     Write-Output "withPS is not compleatly removed from you System"
 
@@ -87,10 +89,9 @@ function remove () {
 function run() {
     $command = Read-Host $program
     if ($command.StartsWith(":")) {
-        Invoke-Expression $command.Trim(":")
-
+        Invoke-Expression $command.Substring(1)        
     } elseif ($command.StartsWith("+")) {
-        $temp = $command.Trim("+")
+        $temp = $command.Substring(1)
         if ($temp.Length -gt 0) {
             $program = "$program " + $temp    
         }        
@@ -109,18 +110,29 @@ function run() {
     }
     run
 }
-if ($help) {
-    printHelp
-} elseif ($version) {
-    printVersion
-} elseif ($update) {
+
+if ($update) {
     update
 } elseif ($install -and -not $progInstalled) {
     install
 } elseif ($remove -and $progInstalled) {
     remove
-} elseif ($program) {
-    run
 } else {
-    printHelp
+    if ($version) {
+        printVersion
+    }
+    if ($help) {
+        printHelp
+    }
+    if ($program) {
+        if (Get-Command $program -errorAction SilentlyContinue)
+        {
+            run
+        } else {
+            echo "error: $program is not installed"
+        }
+    }
+
 }
+
+

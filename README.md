@@ -10,7 +10,7 @@ Usable with PowerShell and CMD
 2. Enter:
 ```
 Invoke-WebRequest https://gitlab.com/Tersker/withps/raw/master/installer.cmd -OutFile "installer.cmd"
-installer.cmd
+.\installer.cmd
 ```
 3. Restart your comupter.
 
@@ -57,10 +57,10 @@ gcc -o -output input.c:
 ```
 
 
-To execute a shell command proper prefix line with `:`.
+To execute a shell command proper prefix line with `:` or `!`.
 
 
-`git: :dir`
+`git: :dir` or `git: !dir`
 
 You can also drop and add different commands.
 

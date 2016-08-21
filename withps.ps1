@@ -40,7 +40,7 @@ function update {
     Write-Output "Updating withPS $progVersion"
     New-Item $progInstallFolder -Force -itemtype directory | Out-Null
     Invoke-WebRequest https://raw.githubusercontent.com/Acader/withPS/master/withps.ps1 -OutFile "$progInstallFolder\withps.ps1"
-    Invoke-WebRequest https://raw.githubusercontent.com/master/with.cmd-OutFile -OutFile "$progInstallFolder\with.cmd"
+    Invoke-WebRequest https://raw.githubusercontent.com/master/with.cmd -OutFile "$progInstallFolder\with.cmd"
     if (-not $progInstalled) {
         install $false    
     }

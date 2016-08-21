@@ -23,7 +23,7 @@ Usable with PowerShell and CMD
 
 Starts an interactive shell with where every command is prefixed using `<program>`.
 
-See ```with -h``` for mor help
+See `with -h` for mor help
 
 For example:
 ```
@@ -53,10 +53,10 @@ gcc -o -output input.c:
 ```
 
 
-To execute a shell command proper prefix line with `:`
+To execute a shell command proper prefix line with `:` or `!`
 
 
-`git: :dir`
+`git: :dir` or `git: !dir`
 
 You can also drop and add different commands.
 

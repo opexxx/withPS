@@ -87,8 +87,9 @@ function remove () {
 }
 
 function run() {
-    $command = Read-Host $program
-    if ($command.StartsWith(":")) {
+    Write-Host -NoNewline "$program`: " #workaround http://stackoverflow.com/questions/35493056/what-can-i-do-with-excalamation-point-when-using-read-host
+    $command = Read-Host
+    if ($command.StartsWith(":") -or $command.StartsWith("!")) {
         Invoke-Expression $command.Substring(1)        
     } elseif ($command.StartsWith("+")) {
         $temp = $command.Substring(1)
@@ -134,5 +135,3 @@ if ($update) {
     }
 
 }
-
-

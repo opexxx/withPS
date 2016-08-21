@@ -57,10 +57,10 @@ gcc -o -output input.c:
 ```
 
 
-To execute a shell command proper prefix line with `:` or `!`.
+To execute a shell command proper prefix line with `:`
 
 
-`git: :dir` or `git: !dir`
+`git: :dir`
 
 You can also drop and add different commands.
 

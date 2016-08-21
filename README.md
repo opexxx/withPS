@@ -7,11 +7,7 @@ Usable with PowerShell and CMD
 ### Installation
 #### From PowerShell
 1. Open Powershell
-2. Enter:
-```
-Invoke-WebRequest https://gitlab.com/Tersker/withps/raw/master/installer.cmd -OutFile "installer.cmd"
-.\installer.cmd
-```
+2. Enter: `(Invoke-WebRequest https://raw.githubusercontent.com/Acader/withPS/master/installer.cmd).content | cmd`
 3. Restart your comupter.
 
 #### Or the old way

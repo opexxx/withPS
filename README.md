@@ -7,18 +7,20 @@ Program prefixing for continuous workflow using a single tool
 Usable with PowerShell and CMD
 
 ### Installation
-#### From PowerShell
-1. Open Powershell
-2. Enter: `(Invoke-WebRequest https://raw.githubusercontent.com/Acader/withPS/master/withps.ps1).content | iex`
-3. Restart your comupter.
+```
+(New-Object Net.WebClient).DownloadString("https://cdn.rawgit.com/Acader/withPS/master/withps.ps1") | iex
 
-#### Or the old way
-1. Clone this repository
-2. Run `.\withps.ps1 -i`
-3. Restart your comupter
+```
+or
+```
+(New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/Acader/withPS/master/withps.ps1") | iex
+```
+or
+```
+.\withps.ps1 -i
+```
 
-
-
+ 
 ### Usage
 
 `with <program>`
@@ -30,9 +32,9 @@ See `with -h` for mor help
 For example:
 ```
 $ with git
-git: add .
-git: commit -a -m "Commited"
-git: push
+git> add .
+git> commit -a -m "Commited"
+git> push
 ```
 
 
@@ -48,29 +50,29 @@ java Primes> 4
 And to repeat commands:
 ```
 $ with gcc -o output input.c
-gcc -o -output input.c:
+gcc -o -output input.c>
 <enter>
 Compiling...
-gcc -o -output input.c:
+gcc -o -output input.c>
 ```
 
 
 To execute a shell command proper prefix line with `:` or `!`
 
 
-`git: :dir` or `git: !dir`
+`git> :dir` or `git> !dir`
 
 You can also drop and add different commands.
 
 ```
 with git
-git: +add
-git add: <some file>
-git add: -
-git: +add test.txt
-git add test.txt: --
-git:
+git> +add
+git> add: <some file>
+git> add: -
+git> +add test.txt
+git> add test.txt: --
+git>
 ```
 
-To exit use `:exit` or press Ctrl + C.
+To exit enter `:exit` or press Ctrl + C.
 

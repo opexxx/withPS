@@ -1,32 +1,28 @@
-#Allow Scripts: Set-ExecutionPolicy Unrestricted -Scope CurrentUser
-#DisallowScripts: Set-ExecutionPolicy Restricted -Scope CurrentUser
 param (
     [switch]$help = $false,
     [switch]$version = $false,
     [switch]$update = $false,
     [switch]$install = $false,
-    [switch]$delete = $false,
     [switch]$remove = $false
 )
-$progVersion = "0.0.2"
+$progVersion = "0.0.3"
 $progInstallFolder = "$env:APPDATA\withps"
-
-$progName = $MyInvocation.MyCommand.Name
 $progPath = $MyInvocation.MyCommand.Path
 $progInstalled = $false
-if ($progPath.StartsWith($progInstallFolder)) {
+if (-not $progPath) {
+    $install = $true
+} elseif ($progPath.StartsWith($progInstallFolder)) {
     $progInstalled = $true
 }
 $program = $args -join " "
 
 function printHelp {
-    Write-Output "Syntax: with [-h] [-v] [-u] [-i] [-d] [-r] program"
+    Write-Output "Syntax: with [-h] [-v] [-u] [-i] [-r] program"
     Write-Output "-h, -help:    Display this message"
     Write-Output "-v, -version: Display the currently installed version of with"
     Write-Output "-u, -update:  Updates with"
     if (-Not $progInstalled) {
         Write-Output "-i, -install: Installs withPS in PATH"
-        Write-Output "-d, -delete:  Delete file after install"
     } else {
         Write-Output "-r, -remove:  Completely removes with form the Computer"
     }    
@@ -38,100 +34,87 @@ function printVersion {
 
 function update {
     Write-Output "Updating withPS $progVersion"
-    New-Item $progInstallFolder -Force -itemtype directory | Out-Null
     Invoke-WebRequest https://raw.githubusercontent.com/Acader/withPS/master/withps.ps1 -OutFile "$progInstallFolder\withps.ps1"
     Invoke-WebRequest https://raw.githubusercontent.com/Acader/withPS/master/with.cmd -OutFile "$progInstallFolder\with.cmd"
-    if (-not $progInstalled) {
-        install $false    
-    }
 }
 
-function install($copy = $true) {
+function install {
     Write-Output "Installing withPS ..."
-    New-Item $progInstallFolder -Force -itemtype directory | Out-Null
-    Write-Output "Appdata dir created"
-    if ($copy) {    
-        Copy-Item $progName "$progInstallFolder\withps.ps1"
-        Write-Output "$progName copyed to AppData as withps.ps1"
+    if (-not (Test-Path $progInstallFolder)) {
+        New-Item $progInstallFolder -Force -itemtype directory | Out-Null    
     }
     $oldPath = [Environment]::GetEnvironmentVariable("PATH", "User")
     if ($oldPath -notlike "*$progInstallFolder*") {        
         $newPath = "$oldPath;$progInstallFolder"
         [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
-        Write-Output "withPS added to the PATH"
-    } else {
-        Write-Output "withPS is already in the PATH"
     }
-    if ($delete) {
-        Remove-Item $progPath -Force
-    }
+    update
     Write-Output "Installation finished"
 }
 
-function remove () {
+function remove {
     Write-Output "Removing withPS ..."
     $oldPath = [Environment]::GetEnvironmentVariable("PATH", "User")
     if ($oldPath -like "*$progInstallFolder*") {        
         $newPath = $oldPath.Replace(";$progInstallFolder", "")
         [Environment]::SetEnvironmentVariable("PATH", $newPath, "User")
-        Write-Output "withPS removed from PATH"
-    } else {
-        Write-Output "withPS isn't in the PATH"
     }
     If (Test-Path $progInstallFolder){
         Remove-Item -Recurse -Force $progInstallFolder
     }
 
-    Write-Output "withPS is not compleatly removed from you System"
+    Write-Output "withPS is now compleatly removed from you System"
 
 }
 
-function run() {
-    Write-Host -NoNewline "$program`: " #workaround http://stackoverflow.com/questions/35493056/what-can-i-do-with-excalamation-point-when-using-read-host
+function run {
+    Write-Host -NoNewline "$program`: "
     $command = Read-Host
-    if ($command.StartsWith(":") -or $command.StartsWith("!")) {
-        Invoke-Expression $command.Substring(1)        
-    } elseif ($command.StartsWith("+")) {
-        $temp = $command.Substring(1)
-        if ($temp.Length -gt 0) {
-            $program = "$program " + $temp    
-        }        
-
-    } elseif ($command.StartsWith("--") -and $command.Length -eq 2) {
-        $program = ($program -split " ")[0]
-
-    } elseif ($command.StartsWith("-") -and $command.Length -eq 1) {
-        $temp = ($program -split " ")
-        if ($temp.Length -gt 1) {
-            $program = $temp[0..($temp.Length - 2)] -join " "
+    switch -wildcard ($command) {
+        "[:!]*" {
+            Invoke-Expression $command.Substring(1)
         }
-        
-    } else {
-        Invoke-Expression "$program $command"
+        "+*" {
+            $temp = $command.Substring(1)
+            if ($temp.Length -gt 0) {
+                $program = "$program " + $temp    
+            }        
+        }
+        "-" {
+            $temp = ($program -split " ")
+            if ($temp.Length -gt 1) {
+                $program = $temp[0..($temp.Length - 2)] -join " "
+            }
+        }
+        "--" {
+            $program = ($program -split " ")[0]
+        }
+        default {
+            Invoke-Expression "$program $command"
+        }
     }
     run
 }
 
-if ($update) {
-    update
-} elseif ($install -and -not $progInstalled) {
+if (-not ($progInstalled -or $install)) {
+    Write-Output "It seams 'with' is not installed run 'with -i' to install it"
+}
+
+if ($install -and -not $progInstalled) {
     install
+} elseif ($update -and $progInstalled) {
+    update
 } elseif ($remove -and $progInstalled) {
     remove
-} else {
-    if ($version) {
-        printVersion
+} elseif ($version) {
+    printVersion
+} elseif ($help) {
+    printHelp
+} elseif ($program) {
+    $programName = ($program -split " ")[0]
+    if (Get-Command $programName -errorAction SilentlyContinue) {
+        run
+    } else {
+        Write-Output "error: '$programName' is not installed"
     }
-    if ($help) {
-        printHelp
-    }
-    if ($program) {
-        if (Get-Command $program -errorAction SilentlyContinue)
-        {
-            run
-        } else {
-            echo "error: $program is not installed"
-        }
-    }
-
 }

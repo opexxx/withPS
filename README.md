@@ -9,7 +9,7 @@ Usable with PowerShell and CMD
 ### Installation
 #### From PowerShell
 1. Open Powershell
-2. Enter: `(Invoke-WebRequest https://raw.githubusercontent.com/Acader/withPS/master/installer.cmd).content | cmd`
+2. Enter: `(Invoke-WebRequest https://raw.githubusercontent.com/Acader/withPS/master/withps.ps1).content | iex`
 3. Restart your comupter.
 
 #### Or the old way

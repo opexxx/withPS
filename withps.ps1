@@ -12,7 +12,7 @@ function Print-Help {
 }
 
 function Print-Version {
-    Write-Host "PowerShell with $version"
+    Write-Host "with for PowerShell $version"
 }
 
 function update {
@@ -21,7 +21,7 @@ function update {
         (New-Object Net.WebClient).DownloadFile("https://raw.githubusercontent.com/Acader/withPS/master/withps.ps1", "$installFolder\withps.ps1")
         (New-Object Net.WebClient).DownloadFile("https://raw.githubusercontent.com/Acader/withPS/master/with.cmd", "$installFolder\with.cmd")
     } else {
-        Write-Warning "with is not installed. To install it run 'with -i'"
+        Write-Warning "withPS is not installed. To install it run 'with -i'"
     }
 }
 

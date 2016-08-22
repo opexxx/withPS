@@ -14,7 +14,7 @@ Usable with PowerShell and CMD
 
 #### Or the old way
 1. Clone this repository
-2. Execute install.cmd
+2. Run `.\withps.ps1 -i`
 3. Restart your comupter
 
 

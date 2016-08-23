@@ -49,9 +49,7 @@ function remove {
     If (Test-Path $installFolder){
         Remove-Item -Recurse -Force $installFolder
     }
-
     Write-Host "withPS is now compleatly removed from you System"
-
 }
 
 function Test-Command ($com) {
@@ -67,12 +65,12 @@ function Test-Command ($com) {
 }
 
 function run {
-    Write-Host -NoNewline "$program`> "
+    Write-Host -NoNewline "$(Get-Location) $program> "
     $command = Read-Host
     switch -wildcard ($command) {
         "[:!]*" {
             $command = $command.Substring(1)
-            if (Test-Command $command) {
+            if ($command -eq "exit" -or (Test-Command $command)) {
                 Invoke-Expression $command
             }
         }

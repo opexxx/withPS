@@ -4,10 +4,10 @@ $installFolder = "$env:APPDATA\withps"
 function Write-Help {
     Write-Host "Syntax: with program"
     Write-Host "-h, -help:    Display this message"
-    Write-Host "-v, -version: Display the currently installed version of with"
-    Write-Host "-u, -update:  Updates with"
+    Write-Host "-v, -version: Display the currently installed version of withPS"
+    Write-Host "-u, -update:  Updates withPS"
     Write-Host "-i, -install: Installs withPS in PATH"
-    Write-Host "-r, -remove:  Completely removes with form the Computer"
+    Write-Host "-r, -remove:  Completely removes withPS form the Computer"
     Write-Host "-g, -github:  Opens the withPS GitHub page"
 }
 
@@ -65,7 +65,7 @@ function Test-Command ($com) {
 }
 
 function run {
-    Write-Host -NoNewline "$(Get-Location) $program> "
+    Write-Host -NoNewline "$(Get-Location) $prefix> "
     $command = Read-Host
     switch -wildcard ($command) {
         "[:!]*" {
@@ -77,20 +77,20 @@ function run {
         "+*" {
             $temp = $command.Substring(1)
             if ($temp.Length -gt 0) {
-                $program = "$program " + $temp    
+                $prefix = "$prefix $temp"    
             }
         }
         "-" {
-            $temp = ($program -split " ")
+            $temp = ($prefix -split " ")
             if ($temp.Length -gt 1) {
-                $program = $temp[0..($temp.Length - 2)] -join " "
+                $prefix = $temp[0..($temp.Length - 2)] -join " "
             }
         }
         "--" {
-            $program = ($program -split " ")[0]
+            $prefix = ($prefix -split " ")[0]
         }
         default {
-            Invoke-Expression "$program $command"
+            Invoke-Expression "$prefix $command"
         }
     }
     run
@@ -100,7 +100,7 @@ if (-not $MyInvocation.MyCommand.Path) {
     install
     break
 }
-$program = $args -join " "
+$prefix = $args -join " "
 
 switch -wildcard ($args[0]) {
     "-h*" { Write-Help }
@@ -110,8 +110,8 @@ switch -wildcard ($args[0]) {
     "-r*" { remove }
     "-g*" { Start-Process "https://github.com/Acader/withPS" }
     Default {
-        if ($program) {
-            if(Test-Command $program) {
+        if ($prefix) {
+            if(Test-Command $prefix) {
                 run
             } 
         } else {

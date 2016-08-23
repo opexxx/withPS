@@ -1,7 +1,7 @@
-$version = "0.0.4"
+$version = "0.1"
 $installFolder = "$env:APPDATA\withps"
 
-function Print-Help {
+function Write-Help {
     Write-Host "Syntax: with program"
     Write-Host "-h, -help:    Display this message"
     Write-Host "-v, -version: Display the currently installed version of with"
@@ -11,7 +11,7 @@ function Print-Help {
     Write-Host "-g, -github:  Opens the withPS GitHub page"
 }
 
-function Print-Version {
+function Write-Version {
     Write-Host "with for PowerShell $version"
 }
 
@@ -100,13 +100,13 @@ function run {
 
 if (-not $MyInvocation.MyCommand.Path) {
     install
-    exit
+    break
 }
 $program = $args -join " "
 
 switch -wildcard ($args[0]) {
-    "-h*" { Print-Help }
-    "-v*" { Print-Version }
+    "-h*" { Write-Help }
+    "-v*" { Write-Version }
     "-u*" { update }
     "-i*" { install }
     "-r*" { remove }
@@ -117,7 +117,7 @@ switch -wildcard ($args[0]) {
                 run
             } 
         } else {
-            Print-Help
+            Write-Help
         }
     }
 }

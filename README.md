@@ -9,7 +9,6 @@ Usable with PowerShell and CMD
 ### Installation
 ```
 (New-Object Net.WebClient).DownloadString("https://cdn.rawgit.com/Acader/withPS/master/withps.ps1") | iex
-
 ```
 or
 ```

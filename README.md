@@ -11,15 +11,15 @@ git> push
 
 ### Installation
 ```
-(New-Object Net.WebClient).DownloadString("https://cdn.rawgit.com/Acader/withPS/master/withps.ps1") | iex
+(New-Object Net.WebClient).DownloadString("https://cdn.rawgit.com/Acader/withPS/master/with.ps1") | iex
 ```
 or
 ```
-(New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/Acader/withPS/master/withps.ps1") | iex
+(New-Object Net.WebClient).DownloadString("https://raw.githubusercontent.com/Acader/withPS/master/with.ps1") | iex
 ```
 or
 ```
-.\withps.ps1 -i
+.\with.ps1 -i
 ```
 
 

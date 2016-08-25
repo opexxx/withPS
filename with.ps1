@@ -18,7 +18,7 @@ function Write-Version {
 function update {
     if (Test-Path $installFolder) {
         Write-Host "Updating withPS $version"
-        (New-Object Net.WebClient).DownloadFile("https://raw.githubusercontent.com/Acader/withPS/master/withps.ps1", "$installFolder\withps.ps1")
+        (New-Object Net.WebClient).DownloadFile("https://raw.githubusercontent.com/Acader/withPS/master/with.ps1", "$installFolder\with.ps1")
         (New-Object Net.WebClient).DownloadFile("https://raw.githubusercontent.com/Acader/withPS/master/with.cmd", "$installFolder\with.cmd")
     } else {
         Write-Warning "withPS is not installed. To install it run 'with -i'"
